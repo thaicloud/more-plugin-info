@@ -1,4 +1,4 @@
-=== Storm Locations ===
+=== More Plugin Info ===
 Contributors: ficklemike
 Tags: plugin, meta, ratings, downloads
 Requires at least: 2.8
