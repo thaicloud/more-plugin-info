@@ -30,7 +30,12 @@ class More_Plugin_Info {
 		$plugin = plugin_basename(__FILE__); 
 		add_filter("plugin_action_links_$plugin", array($this, 'settings_page_link') );
 		
+		// Initialize options page
+		add_action('admin_init', array($this, 'admin_init'));
+		
 		add_action( 'admin_notices', array( $this, 'plugin_activation' ) ) ;
+		
+		
 	    
 	}
 	
@@ -117,34 +122,17 @@ class More_Plugin_Info {
 	
 	// Display settings page
 	function display_settings(){
-		
-		if(!empty($_POST['submit_check'])) {  
-			?>
-			<div id="message" class="updated">
-				<p>Plugin information settings updated. <a href="plugins.php">Go to Plugins</a>.</p>
-			</div>
-			<?php
-			$requires = $_POST['mpi_requires'];
-	        update_option('mpi_requires', $requires);
-			$tested  = $_POST['mpi_tested'];
-			update_option('mpi_tested', $tested);
-			$rating = $_POST['mpi_rating'];
-			update_option('mpi_rating', $rating);
-			$num_ratings = $_POST['mpi_num_ratings'];
-			update_option('mpi_num_ratings', $num_ratings);
-			$added = $_POST['mpi_added'];
-			update_option('mpi_added', $added);
-			$donate_link = $_POST['mpi_donate_link'];
-			update_option('mpi_donate_link', $donate_link);
-			$download_link = $_POST['mpi_download_link'];
-			update_option('mpi_download_link', $download_link);
-			$updated = $_POST['mpi_updated'];
-			update_option('mpi_updated', $updated);
-			$downloads = $_POST['mpi_downloads'];
-			update_option('mpi_downloads', $downloads);
-			$realtime = $_POST['mpi_realtime'];
-			update_option('mpi_realtime', $realtime);
-		}else{
+		echo '<div class="wrap">';
+		echo '<h2>More Plugin Info</h2>';
+		echo "<form name='mpi_form' method='post' action='". str_replace( '%7E', '~', $_SERVER['REQUEST_URI'])."'>";
+		settings_fields('mpi_settings'); 
+		do_settings_sections('mpi_settings'); 
+		echo '<p><input type="submit" name="Submit" class="button-primary" value="Save Changes" /></p>';
+		echo '</form>';
+		echo '</div>';
+	}
+	
+	function admin_init(){
 			$requires  = get_option('mpi_requires');
 			$tested  = get_option('mpi_tested');
 			$rating  = get_option('mpi_rating', 'on');
@@ -155,127 +143,53 @@ class More_Plugin_Info {
 			$updated  = get_option('mpi_updated');
 			$downloads  = get_option('mpi_downloads', 'on');
 			$realtime  = get_option('mpi_realtime');
-		}   
-?>
-		<div class="wrap">
-		<h2>More Plugin Info Settings</h2>
-			<h3>Data Sync Settings</h3>
-			<p>In order to display accurate data, you should sync your plugin data from time to time. </p>
-			<p>Your plugin data was last updated: <strong><?php echo get_option('mpi_sync_timestamp', 'Never'); ?></strong></p>
-					
-			<table class="form-table">
-			<tbody>	
-			<form name="mpi_sync_form" method="post" action="plugins.php?mpi_sync">
-				<tr valign="top">
-					<td> 
-						<input type="submit" name="Submit" class="button-primary" value="Update Plugin Data Now" />
-						 ( This may take a couple of minutes )<p>
-					</td>
-				</tr>
-			</form>
-			</tbody>
-			</table>
-			
-			<h3>Display Settings</h3>
-			<p>
-				Select which fields should appear in the plugins listing.
-			</p>
-			<table class="form-table">
-			<tbody>	
-			<form name="mpi_form" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
-				<input type="hidden" name="submit_check" value="Y">  
-				<tr valign="top">
-					<th scope="row">
-						<label for="mpi_downloads">Number of Downloads:</label>
-					</th>
-					<td> 
-						<input type="checkbox" name="mpi_downloads" <?php if(!empty($downloads)){ echo ' checked'; } ?> />
-					</td>
-				</tr>
-				<tr valign="top">
-					<th scope="row">
-						<label for="mpi_rating">Rating:</label>
-					</th>
-					<td> 
-						<input type="checkbox" name="mpi_rating" <?php if(!empty($rating)){ echo ' checked'; } ?> />
-					</td>
-				</tr>
-				<tr valign="top">
-					<th scope="row">
-						<label for="mpi_num_ratings">Number of Ratings:</label>
-					</th>
-					<td> 
-						<input type="checkbox" name="mpi_num_ratings" <?php if(!empty($num_ratings)){ echo ' checked'; } ?> />
-					</td>
-				</tr>
-				<tr valign="top">
-					<th scope="row">
-						<label for="mpi_added">Date Added:</label>
-					</th>
-					<td> 
-						<input type="checkbox" name="mpi_added" <?php if(!empty($added)){ echo ' checked'; } ?> />
-					</td>
-				</tr>
-				<tr valign="top">
-					<th scope="row">
-						<label for="mpi_updated">Last Updated Date:</label>
-					</th>
-					<td> 
-						<input type="checkbox" name="mpi_updated" <?php if(!empty($updated)){ echo ' checked'; } ?> />
-					</td>
-				</tr>
-				<tr valign="top">
-					<th scope="row">
-						<label for="mpi_requires">Requires Version:</label>
-					</th>
-					<td> 
-						<input type="checkbox" name="mpi_requires" <?php if(!empty($requires)){ echo ' checked'; } ?> />
-					</td>
-				</tr>
-				<tr valign="top">
-					<th scope="row">
-						<label for="mpi_tested">Tested Version:</label>
-					</th>
-					<td> 
-						<input type="checkbox" name="mpi_tested" <?php if(!empty($tested)){ echo ' checked'; } ?> />
-					</td>
-				</tr>
-				<tr valign="top">
-					<th scope="row">
-						<label for="mpi_donate_link">Donate Link:</label>
-					</th>
-					<td> 
-						<input type="checkbox" name="mpi_donate_link" <?php if(!empty($donate_link)){ echo ' checked'; } ?> />
-					</td>
-				</tr>
-				<tr valign="top">
-					<th scope="row">
-						<label for="mpi_download_link">Download Link:</label>
-					</th>
-					<td> 
-						<input type="checkbox" name="mpi_download_link" <?php if(!empty($download_link)){ echo ' checked'; } ?> />
-					</td>
-				</tr>
-				<tr valign="top">
-					<th scope="row">
-						<label for="mpi_realtime"><strong>Auto-sync (not recommended):</strong></label>
-					</th>
-					<td> 
-						<input type="checkbox" name="mpi_realtime" <?php if(!empty($realtime)){ echo ' checked'; } ?> />
-					</td>
-				</tr>
-				
-				<tr valign="top">
-					<td> 
-						<input type="submit" name="Submit" class="button-primary" value="Save Changes" />
-					</td>
-				</tr>
-			</form>
-			</tbody>
-			</table>
-		</div>
-					
-		<?php
+		
+		add_settings_section(  
+		    'mpi_general_options_section',         // ID used to identify this section and with which to register options  
+		    'General Options',                  // Title to be displayed on the administration page  
+		    array($this, 'general_options_section_callback'), // Callback used to render the description of the section  
+			'mpi_settings'
+		);
+		add_settings_field(   
+		    'mpi_downloads',                      // ID used to identify the field throughout the theme  
+		    'Number of Downloads',                // The label to the left of the option interface element  
+		    array($this, 'checkbox_callback'),   // The name of the function responsible for rendering the option interface  
+		    'mpi_settings',                          // The page on which this option will be displayed  
+		    'mpi_general_options_section',         // The name of the section to which this field belongs  
+		    array(                              // The array of arguments to pass to the callback. In this case, just a description.  
+		        'id' => 'mpi_downloads',
+		  		'value' => $downloads
+		    )  
+		);
+		add_settings_field(   
+		    'mpi_rating',                      // ID used to identify the field throughout the theme  
+		    'Rating',                // The label to the left of the option interface element  
+		    array($this, 'checkbox_callback'),   // The name of the function responsible for rendering the option interface  
+		    'mpi_settings',                          // The page on which this option will be displayed  
+		    'mpi_general_options_section',         // The name of the section to which this field belongs  
+		    array(                              // The array of arguments to pass to the callback. In this case, just a description.  
+		        'id' => 'mpi_rating',
+		  		'value' => $rating
+		    )  
+		);
+		
+		register_setting('mpi_settings','mpi_downloads');
+		register_setting('mpi_settings','mpi_rating');
+	}
+	
+	function general_options_section_callback(){
+		echo '<p>Please choose which fields you would like to be visible on the plugin listing.</p>';		
+	}
+	
+	function data_sync_section_callback(){
+		echo '<p>In order to display accurate data, you should sync your plugin data from time to time. </p>
+		<p>Your plugin data was last updated: <strong>'. get_option('mpi_sync_timestamp', 'Never').'</strong></p>';		
+	}
+	
+	function checkbox_callback($args){
+		echo "<input type='checkbox' id='$args[id]' name='$args[id]'";
+		if(!empty($args[value])){ echo ' checked'; } 
+		echo ">";
 	}
 	
 	// Add settings page link for this plugin
@@ -299,9 +213,7 @@ class More_Plugin_Info {
 			$html .= '</p>';
 			$html .= '</div>';
 		}
-
-	  echo $html;
-	
+		echo $html;
 	  }
 }
 
