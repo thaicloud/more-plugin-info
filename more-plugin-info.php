@@ -54,20 +54,25 @@ class MJ_More_Plugin_Info {
 			}
 		}
 		
-		add_filter( 'plugin_row_meta', array( $this, 'plugin_meta_display' ), 10, 2  );
-		add_action( 'admin_menu', array( $this, 'add_menu_item' ) );
+		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2  );
+		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		
-		$plugin = plugin_basename( __FILE__ ); 
-		add_filter( 'plugin_action_links_$plugin', array( $this, 'settings_page_link' ) );
+		$plugin_basename = plugin_basename( __FILE__ ); 
+		add_filter( "plugin_action_links_$plugin_basename", array( $this, 'plugin_action_links' ) );
 		
 		// Initialize options page
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		
-		add_action( 'admin_notices', array( $this, 'plugin_activation' ) ) ;
+		add_action( 'admin_notices', array( $this, 'admin_notices' ) ) ;
 		
 	}
 	
-	// For each plugin, use WordPress API to collect additional data and populate $plugin_meta
+	/**
+    * For each plugin, use WordPress API to collect additional data 
+    * and populate $plugin_meta
+    *
+    * @return 
+    */
 	function plugin_meta_populate( $plugins ){
 		
 		foreach ( $plugins as $slug => $plugin ){
@@ -76,8 +81,18 @@ class MJ_More_Plugin_Info {
 			
 			// Thanks to http://wp.tutsplus.com/tutorials/plugins/communicating-with-the-wordpress-org-plugin-api/
 			// for detailing the following WP API format
-			$args = (object) array( 'slug' => $slug, 'fields' => array( 'sections' => false, 'tags' => false ) );
-			$request = array( 'action' => 'plugin_information', 'timeout' => 5, 'request' => serialize( $args ) );
+			$args = (object) array( 
+				'slug' => $slug, 
+				'fields' => array( 
+					'sections' => false, 
+					'tags' => false 
+				) 
+			);
+			$request = array( 
+				'action' => 'plugin_information', 
+				'timeout' => 5, 
+				'request' => serialize( $args ) 
+			);
 			$url = 'http://api.wordpress.org/plugins/info/1.0/';
 			$response = wp_remote_post( $url, array( 'body' => $request ) );
 			
@@ -110,30 +125,34 @@ class MJ_More_Plugin_Info {
 		return $plugins;
 	}
 	
-	// If data exists, display on plugin listing (when options allow)
-	function plugin_meta_display( $links, $slug ){
+	/**
+	* If data exists, display on plugin listing (when options allow)
+	*
+	* @return 
+	*/	
+	function plugin_row_meta( $links, $slug ){
 		
 		$slug = substr( $slug, 0, strpos( $slug, '/' ) );	
 		
 		if ( !empty( $this->plugin_meta[ $slug ] ) ){	
 
-			if ( get_option( 'mpi_downloads', 'on' ) == 'on' )
+			if ( true === get_option( 'mpi_downloads', 'on' ) )
 				array_push( $links, $this->plugin_meta[ $slug ]['downloads'] );
-			if ( get_option( 'mpi_rating', 'on' ) == 'on' )
+			if ( true === get_option( 'mpi_rating', 'on' ) )
 				array_push( $links, $this->plugin_meta[ $slug ]['rating'] );
-			if ( get_option( 'mpi_num_ratings', 'on' ) == 'on' )
+			if ( true === get_option( 'mpi_num_ratings', 'on' ) )
 				array_push( $links, $this->plugin_meta[ $slug ]['num_ratings'] );
-			if ( get_option( 'mpi_added' ) == 'on' )
+			if ( true === get_option( 'mpi_added' ) )
 				array_push( $links, $this->plugin_meta[ $slug ]['added'] );
-			if ( get_option( 'mpi_updated' ) == 'on' )
+			if ( true === get_option( 'mpi_updated' ) )
 				array_push( $links, $this->plugin_meta[ $slug ]['updated'] );
-			if ( get_option( 'mpi_requires' ) == 'on' )
+			if ( true === get_option( 'mpi_requires' ) )
 				array_push( $links, $this->plugin_meta[ $slug ]['requires'] );
-			if ( get_option( 'mpi_tested' ) == 'on' )
+			if ( true === get_option( 'mpi_tested' ) )
 				array_push( $links, $this->plugin_meta[ $slug ]['tested'] );
-			if ( get_option( 'mpi_donate_link' ) == 'on' )
+			if ( true === get_option( 'mpi_donate_link' ) )
 				array_push( $links, $this->plugin_meta[ $slug ]['donate_link'] );
-			if ( get_option( 'mpi_download_link' ) == 'on' )
+			if ( true === get_option( 'mpi_download_link' ) )
 				array_push( $links, $this->plugin_meta[ $slug ]['download_link'] );
 		}
 		
@@ -143,12 +162,16 @@ class MJ_More_Plugin_Info {
 		return $links;
 	}
 	
-	// Add menu item to settings page
-	function add_menu_item(){
+	/**
+	* Add settings menu
+	*/
+	function admin_menu(){
 		add_options_page( 'More Plugin Info', 'More Plugin Info', 'administrator', 'mpi_settings', array( $this, 'display_settings' ) );	    
 	}
 	
-	// Display settings page
+	/**
+	* Display settings page 
+	*/
 	function display_settings(){
 		echo '<div class="wrap">';
 		echo '<h2>More Plugin Info</h2>';
@@ -160,6 +183,9 @@ class MJ_More_Plugin_Info {
 		echo '</div>';
 	}
 	
+	/**
+	* Initialize components of settings page
+	*/
 	function admin_init(){
 			$requires  = get_option( 'mpi_requires' );
 			$tested  = get_option( 'mpi_tested' );
@@ -220,8 +246,12 @@ class MJ_More_Plugin_Info {
 		echo ">";
 	}
 	
-	// Add settings page link for this plugin
-	function settings_page_link( $links ){
+	/**
+	* Add settings page link for this plugin
+	*
+	* @return 
+	*/
+	function plugin_action_links( $links ){
 	
 		$settings_link = '<a href="options-general.php?page=mpi_settings">Settings</a>'; 
 		array_unshift( $links, $settings_link ); 
@@ -229,8 +259,10 @@ class MJ_More_Plugin_Info {
 		return $links;
 	}
 	
-	// Add sync prompt on plugin activation
-	function plugin_activation() {
+	/**
+	* Add sync prompt on plugin activation
+	*/
+	function admin_notices() {
 	
 		$mpi_plugin_check = get_option( 'mpi_sync_timestamp' );
 		if ( empty( $mpi_plugin_check ) ){
