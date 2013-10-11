@@ -1,6 +1,8 @@
 === More Plugin Info ===
-Contributors: ficklemike
+Contributors: thaicloud
 Tags: plugin, meta, ratings, downloads
+Author URI: http://brainstormmedia.com 
+Plugin URI: https://bitbucket.org/brainstormmedia/more-plugin-info
 Requires at least: 2.8
 Tested up to: 3.6.1
 Stable tag: 1.0
@@ -23,5 +25,5 @@ To change the plugin settings, go to Settings > More Plugin Info and select whic
 == Changelog ==
 
 = 1.0.0 =
-* Initial build
+* Initial release
 
