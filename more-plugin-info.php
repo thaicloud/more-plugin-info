@@ -60,7 +60,6 @@ class MJ_More_Plugin_Info {
 		$plugin_basename = plugin_basename( __FILE__ ); 
 		add_filter( "plugin_action_links_$plugin_basename", array( $this, 'plugin_action_links' ) );
 		
-		// Initialize options page
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) ) ;
@@ -136,23 +135,23 @@ class MJ_More_Plugin_Info {
 		
 		if ( !empty( $this->plugin_meta[ $slug ] ) ){	
 
-			if ( true === get_option( 'mpi_downloads', 'on' ) )
+			if ( get_option( 'mpi_downloads', 'on' ) )
 				array_push( $links, $this->plugin_meta[ $slug ]['downloads'] );
-			if ( true === get_option( 'mpi_rating', 'on' ) )
+			if ( get_option( 'mpi_rating', 'on' ) )
 				array_push( $links, $this->plugin_meta[ $slug ]['rating'] );
-			if ( true === get_option( 'mpi_num_ratings', 'on' ) )
+			if ( get_option( 'mpi_num_ratings', 'on' ) )
 				array_push( $links, $this->plugin_meta[ $slug ]['num_ratings'] );
-			if ( true === get_option( 'mpi_added' ) )
+			if ( get_option( 'mpi_added' ) )
 				array_push( $links, $this->plugin_meta[ $slug ]['added'] );
-			if ( true === get_option( 'mpi_updated' ) )
+			if ( get_option( 'mpi_updated' ) )
 				array_push( $links, $this->plugin_meta[ $slug ]['updated'] );
-			if ( true === get_option( 'mpi_requires' ) )
+			if ( get_option( 'mpi_requires' ) )
 				array_push( $links, $this->plugin_meta[ $slug ]['requires'] );
-			if ( true === get_option( 'mpi_tested' ) )
+			if ( get_option( 'mpi_tested' ) )
 				array_push( $links, $this->plugin_meta[ $slug ]['tested'] );
-			if ( true === get_option( 'mpi_donate_link' ) )
+			if ( get_option( 'mpi_donate_link' ) )
 				array_push( $links, $this->plugin_meta[ $slug ]['donate_link'] );
-			if ( true === get_option( 'mpi_download_link' ) )
+			if ( get_option( 'mpi_download_link' ) )
 				array_push( $links, $this->plugin_meta[ $slug ]['download_link'] );
 		}
 		
@@ -187,44 +186,44 @@ class MJ_More_Plugin_Info {
 	* Initialize components of settings page
 	*/
 	function admin_init(){
-			$requires  = get_option( 'mpi_requires' );
-			$tested  = get_option( 'mpi_tested' );
-			$rating  = get_option( 'mpi_rating', 'on' );
-			$num_ratings  = get_option( 'mpi_num_ratings', 'on' );
-			$added  = get_option( 'mpi_added' );
-			$donate_link  = get_option( 'mpi_donate_link' );
-			$download_link  = get_option( 'mpi_download_link' );
-			$updated  = get_option( 'mpi_updated' );
-			$downloads  = get_option( 'mpi_downloads', 'on' );
-			$realtime  = get_option( 'mpi_realtime' );
+		$requires  = get_option( 'mpi_requires' );
+		$tested  = get_option( 'mpi_tested' );
+		$rating  = get_option( 'mpi_rating', 'on' );
+		$num_ratings  = get_option( 'mpi_num_ratings', 'on' );
+		$added  = get_option( 'mpi_added' );
+		$donate_link  = get_option( 'mpi_donate_link' );
+		$download_link  = get_option( 'mpi_download_link' );
+		$updated  = get_option( 'mpi_updated' );
+		$downloads  = get_option( 'mpi_downloads', 'on' );
+		$realtime  = get_option( 'mpi_realtime' );
 		
 		add_settings_section(  
-		    'mpi_general_options_section',         // ID used to identify this section and with which to register options  
-		    'General Options',                  // Title to be displayed on the administration page  
-		    array( $this, 'general_options_section_callback' ), // Callback used to render the description of the section  
+		    'mpi_general_options_section',           
+		    'General Options',                    
+		    array( $this, 'general_options_section_callback' ),   
 			'mpi_settings'
 		);
 		add_settings_field(   
-		    'mpi_downloads',                      // ID used to identify the field throughout the theme  
-		    'Number of Downloads',                // The label to the left of the option interface element  
-		    array( $this, 'checkbox_callback' ),   // The name of the function responsible for rendering the option interface  
-		    'mpi_settings',                          // The page on which this option will be displayed  
-		    'mpi_general_options_section',         // The name of the section to which this field belongs  
-		    array(                              // The array of arguments to pass to the callback. In this case, just a description.  
+		    'mpi_downloads',                       
+		    'Number of Downloads',                
+		    array( $this, 'checkbox_callback' ),  
+		    'mpi_settings',                          
+		    'mpi_general_options_section',           
+		    array(                               
 		        'id' => 'mpi_downloads',
 		  		'value' => $downloads
 		    )  
 		);
 		add_settings_field(   
-		    'mpi_rating',                      // ID used to identify the field throughout the theme  
-		    'Rating',                // The label to the left of the option interface element  
-		    array( $this, 'checkbox_callback' ),   // The name of the function responsible for rendering the option interface  
-		    'mpi_settings',                          // The page on which this option will be displayed  
-		    'mpi_general_options_section',         // The name of the section to which this field belongs  
-		    array(                              // The array of arguments to pass to the callback. In this case, just a description.  
+		    'mpi_rating',                        
+		    'Rating',                
+		    array( $this, 'checkbox_callback' ),     
+		    'mpi_settings',                           
+		    'mpi_general_options_section',           
+		    array(                               
 		        'id' => 'mpi_rating',
 		  		'value' => $rating
-		    )  
+		    )
 		);
 		
 		register_setting( 'mpi_settings', 'mpi_downloads' );
