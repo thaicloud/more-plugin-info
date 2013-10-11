@@ -266,14 +266,13 @@ class MJ_More_Plugin_Info {
 	
 		$mpi_plugin_check = get_option( 'mpi_sync_timestamp' );
 		if ( empty( $mpi_plugin_check ) ){
-			$html = '<div class="updated">';
-			$html .= '<p>';
-			$html .= 'In order to complete your More Plugin Info setup, <a href="plugins.php?mpi_sync">please run the plugin sync</a>.';
-			$html .= '<br /> This may take a couple of minutes.';
-			$html .= '</p>';
-			$html .= '</div>';
+			?>
+			<div class="updated">
+				<p>In order to complete your More Plugin Info setup, <a href="plugins.php?mpi_sync">please run the plugin sync</a>.<br />
+				This may take a couple of minutes.</p>
+			</div>
+			<?php
 		}
-		echo $html;
-	  }
+	}
 }
 
