@@ -7,13 +7,43 @@ Author: Mike Jordan
 Author URI: http://brainstormmedia.com/
 */
 
-add_action('init', create_function('', 'new More_Plugin_Info();'));
+add_action( 'init', 'MJ_More_Plugin_Info::get_instance', 11 );
 
-class More_Plugin_Info {
+class MJ_More_Plugin_Info {
 	
-	var $plugin_meta;
-
-	function __construct() {
+	/**
+	* @var MJ_More_Plugin_Info Instance of the class.
+	*/
+	private static $instance = false;
+	
+	/**
+	* @var array results from WordPress API connection
+	*/
+	private $plugin_meta;
+	
+	/**
+	* Don't use this. Use ::get_instance() instead.
+	*/
+	public function __construct() {
+		if ( !self::$instance ) {
+			$message = '<code>' . __CLASS__ . '</code> is a singleton.<br/> Please get an instantiate it with <code>' . __CLASS__ . '::get_instance();</code>';
+			wp_die( $message );
+		}	
+	}
+	
+	public static function get_instance() {
+		if ( !is_a( self::$instance, __CLASS__ ) ) {
+			self::$instance = true;
+			self::$instance = new self();
+			self::$instance->init();
+		}
+		return self::$instance;
+	}
+	
+	/**
+	* Initial setup. Called by get_instance.
+	*/
+	protected function init() {
 		
 		if(get_option('mpi_realtime',false) == true || isset($_GET['mpi_sync'])){
 			add_filter( 'all_plugins', array($this, 'plugin_meta_populate') );
@@ -24,19 +54,17 @@ class More_Plugin_Info {
 			}
 		}
 		
-		add_filter( "plugin_row_meta", array($this, 'plugin_meta_display'), 10, 2  );
+		add_filter( 'plugin_row_meta', array($this, 'plugin_meta_display'), 10, 2  );
 		add_action('admin_menu', array($this, 'add_menu_item'));
 		
 		$plugin = plugin_basename(__FILE__); 
-		add_filter("plugin_action_links_$plugin", array($this, 'settings_page_link') );
+		add_filter('plugin_action_links_$plugin', array($this, 'settings_page_link') );
 		
 		// Initialize options page
 		add_action('admin_init', array($this, 'admin_init'));
 		
 		add_action( 'admin_notices', array( $this, 'plugin_activation' ) ) ;
 		
-		
-	    
 	}
 	
 	// For each plugin, use WordPress API to collect additional data and populate $plugin_meta
