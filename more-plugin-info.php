@@ -165,7 +165,7 @@ class MJ_More_Plugin_Info {
 	* Add settings menu
 	*/
 	function admin_menu(){
-		add_options_page( 'More Plugin Info', 'More Plugin Info', 'administrator', 'mpi_settings', array( $this, 'display_settings' ) );	    
+		add_options_page( 'More Plugin Info', 'More Plugin Info', 'administrator', 'more-plugin-info', array( $this, 'display_settings' ) );	    
 	}
 	
 	/**
@@ -175,8 +175,8 @@ class MJ_More_Plugin_Info {
 		echo '<div class="wrap">';
 		echo '<h2>More Plugin Info</h2>';
 		echo "<form name='mpi_form' method='post' action='options.php'>";
-		settings_fields( 'mpi_settings' ); 
-		do_settings_sections( 'mpi_settings' ); 
+		settings_fields( 'mpi-settings-group' ); 
+		do_settings_sections( 'more-plugin-info' ); 
 		submit_button( 'Save Changes' );
 		echo '</form>';
 		echo '</div>';
@@ -201,13 +201,13 @@ class MJ_More_Plugin_Info {
 		    'mpi_general_options_section',           
 		    'General Options',                    
 		    array( $this, 'general_options_section_callback' ),   
-			'mpi_settings'
+			'more-plugin-info'
 		);
 		add_settings_field(   
 		    'mpi_downloads',                       
 		    'Number of Downloads',                
 		    array( $this, 'checkbox_callback' ),  
-		    'mpi_settings',                          
+		    'more-plugin-info',                          
 		    'mpi_general_options_section',           
 		    array(                               
 		        'id' => 'mpi_downloads',
@@ -218,7 +218,7 @@ class MJ_More_Plugin_Info {
 		    'mpi_rating',                        
 		    'Rating',                
 		    array( $this, 'checkbox_callback' ),     
-		    'mpi_settings',                           
+		    'more-plugin-info',                           
 		    'mpi_general_options_section',           
 		    array(                               
 		        'id' => 'mpi_rating',
@@ -226,8 +226,8 @@ class MJ_More_Plugin_Info {
 		    )
 		);
 		
-		register_setting( 'mpi_settings', 'mpi_downloads' );
-		register_setting( 'mpi_settings', 'mpi_rating' );
+		register_setting( 'mpi-settings-group', 'mpi_downloads' );
+		register_setting( 'mpi-settings-group', 'mpi_rating' );
 	}
 	
 	function general_options_section_callback(){
@@ -250,7 +250,7 @@ class MJ_More_Plugin_Info {
 	*/
 	function plugin_action_links( $links ){
 	
-		$settings_link = '<a href="options-general.php?page=mpi_settings">Settings</a>'; 
+		$settings_link = '<a href="options-general.php?page=more-plugin-info">Settings</a>'; 
 		array_unshift( $links, $settings_link ); 
 		
 		return $links;
