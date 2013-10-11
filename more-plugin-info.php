@@ -241,7 +241,7 @@ class MJ_More_Plugin_Info {
 	
 	function checkbox_callback( $args ){
 		echo "<input type='checkbox' id='$args[id]' name='$args[id]'";
-		if ( !empty( $args[value] ) ){ echo ' checked'; } 
+		if ( !empty( $args['value'] ) ){ echo ' checked'; } 
 		echo ">";
 	}
 	
