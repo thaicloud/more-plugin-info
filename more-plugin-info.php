@@ -134,24 +134,26 @@ class MJ_More_Plugin_Info {
 		$slug = substr( $slug, 0, strpos( $slug, '/' ) );	
 		
 		if ( !empty( $this->plugin_meta[ $slug ] ) ){	
+			
+			$settings = (array) get_option( 'mpi-settings' );
 
-			if ( get_option( 'mpi_downloads', 'on' ) )
+			if ( $settings['downloads'] )
 				array_push( $links, $this->plugin_meta[ $slug ]['downloads'] );
-			if ( get_option( 'mpi_rating', 'on' ) )
+			if ( $settings['rating'] )
 				array_push( $links, $this->plugin_meta[ $slug ]['rating'] );
-			if ( get_option( 'mpi_num_ratings', 'on' ) )
+			if ( $settings['num_ratings'] )
 				array_push( $links, $this->plugin_meta[ $slug ]['num_ratings'] );
-			if ( get_option( 'mpi_added' ) )
+			if ( $settings['added'] )
 				array_push( $links, $this->plugin_meta[ $slug ]['added'] );
-			if ( get_option( 'mpi_updated' ) )
+			if ( $settings['updated'] )
 				array_push( $links, $this->plugin_meta[ $slug ]['updated'] );
-			if ( get_option( 'mpi_requires' ) )
+			if ( $settings['requires'] )
 				array_push( $links, $this->plugin_meta[ $slug ]['requires'] );
-			if ( get_option( 'mpi_tested' ) )
+			if ( $settings['tested'] )
 				array_push( $links, $this->plugin_meta[ $slug ]['tested'] );
-			if ( get_option( 'mpi_donate_link' ) )
+			if ( $settings['donate_link'] )
 				array_push( $links, $this->plugin_meta[ $slug ]['donate_link'] );
-			if ( get_option( 'mpi_download_link' ) )
+			if ( $settings['download_link'] )
 				array_push( $links, $this->plugin_meta[ $slug ]['download_link'] );
 		}
 		
@@ -174,7 +176,11 @@ class MJ_More_Plugin_Info {
 	function display_settings(){
 		echo '<div class="wrap">';
 		echo '<h2>More Plugin Info</h2>';
-		echo "<form name='mpi_form' method='post' action='options.php'>";
+		echo '<form name="mpi_sync_form" method="post" action="plugins.php?mpi_sync">';
+		$this->plugin_sync_info();
+		submit_button( 'Update Plugin Data Now' );
+		echo '</form>';
+		echo '<form name="mpi_form" method="post" action="options.php">';
 		settings_fields( 'mpi-settings-group' ); 
 		do_settings_sections( 'more-plugin-info' ); 
 		submit_button( 'Save Changes' );
@@ -186,16 +192,8 @@ class MJ_More_Plugin_Info {
 	* Initialize components of settings page
 	*/
 	function admin_init(){
-		$requires  = get_option( 'mpi_requires' );
-		$tested  = get_option( 'mpi_tested' );
-		$rating  = get_option( 'mpi_rating', 'on' );
-		$num_ratings  = get_option( 'mpi_num_ratings', 'on' );
-		$added  = get_option( 'mpi_added' );
-		$donate_link  = get_option( 'mpi_donate_link' );
-		$download_link  = get_option( 'mpi_download_link' );
-		$updated  = get_option( 'mpi_updated' );
-		$downloads  = get_option( 'mpi_downloads', 'on' );
-		$realtime  = get_option( 'mpi_realtime' );
+		
+		$settings = (array) get_option( 'mpi-settings' );
 		
 		add_settings_section(  
 		    'mpi_general_options_section',           
@@ -203,6 +201,14 @@ class MJ_More_Plugin_Info {
 		    array( $this, 'general_options_section_callback' ),   
 			'more-plugin-info'
 		);
+		
+		add_settings_section(  
+		    'mpi_autosync_options_section',           
+		    'Automatic Sync',                    
+		    array( $this, 'autosync_options_section_callback' ),   
+			'more-plugin-info'
+		);
+		
 		add_settings_field(   
 		    'mpi_downloads',                       
 		    'Number of Downloads',                
@@ -210,8 +216,8 @@ class MJ_More_Plugin_Info {
 		    'more-plugin-info',                          
 		    'mpi_general_options_section',           
 		    array(                               
-		        'id' => 'mpi_downloads',
-		  		'value' => $downloads
+		        'id' => 'mpi-settings[downloads]',
+		  		'value' => $settings[downloads]
 		    )  
 		);
 		add_settings_field(   
@@ -221,17 +227,116 @@ class MJ_More_Plugin_Info {
 		    'more-plugin-info',                           
 		    'mpi_general_options_section',           
 		    array(                               
-		        'id' => 'mpi_rating',
-		  		'value' => $rating
+		        'id' => 'mpi-settings[rating]',
+		  		'value' => $settings[rating]
+		    )
+		);
+		add_settings_field(   
+		    'mpi_num_ratings',                        
+		    'Number of Ratings',                
+		    array( $this, 'checkbox_callback' ),     
+		    'more-plugin-info',                           
+		    'mpi_general_options_section',           
+		    array(                               
+		        'id' => 'mpi-settings[num_ratings]',
+		  		'value' => $settings[num_ratings]
+		    )
+		);
+		add_settings_field(   
+		    'mpi_added',                        
+		    'Date Added',                
+		    array( $this, 'checkbox_callback' ),     
+		    'more-plugin-info',                           
+		    'mpi_general_options_section',           
+		    array(                               
+		        'id' => 'mpi-settings[added]',
+		  		'value' => $settings[added]
+		    )
+		);
+		add_settings_field(   
+		    'mpi_updated',                        
+		    'Last Updated Date',                
+		    array( $this, 'checkbox_callback' ),     
+		    'more-plugin-info',                           
+		    'mpi_general_options_section',           
+		    array(                               
+		        'id' => 'mpi-settings[updated]',
+		  		'value' => $settings[updated]
+		    )
+		);
+		add_settings_field(   
+		    'mpi_requires',                        
+		    'Requires Version',                
+		    array( $this, 'checkbox_callback' ),     
+		    'more-plugin-info',                           
+		    'mpi_general_options_section',           
+		    array(                               
+		        'id' => 'mpi-settings[requires]',
+		  		'value' => $settings[requires]
+		    )
+		);
+		add_settings_field(   
+		    'mpi_tested',                        
+		    'Tested Version',                
+		    array( $this, 'checkbox_callback' ),     
+		    'more-plugin-info',                           
+		    'mpi_general_options_section',           
+		    array(                               
+		        'id' => 'mpi-settings[tested]',
+		  		'value' => $settings[tested]
+		    )
+		);
+		add_settings_field(   
+		    'mpi_donate_link',                        
+		    'Donate Link',                
+		    array( $this, 'checkbox_callback' ),     
+		    'more-plugin-info',                           
+		    'mpi_general_options_section',           
+		    array(                               
+		        'id' => 'mpi-settings[donate_link]',
+		  		'value' => $settings[donate_link]
+		    )
+		);
+		add_settings_field(   
+		    'mpi_download_link',                        
+		    'Download Link',                
+		    array( $this, 'checkbox_callback' ),     
+		    'more-plugin-info',                           
+		    'mpi_general_options_section',           
+		    array(                               
+		        'id' => 'mpi-settings[download_link]',
+		  		'value' => $settings[download_link]
+		    )
+		);
+		add_settings_field(   
+		    'mpi_realtime',                        
+		    'Enable automatic syncing',                
+		    array( $this, 'checkbox_callback' ),     
+		    'more-plugin-info',                           
+		    'mpi_autosync_options_section',           
+		    array(                               
+		        'id' => 'mpi_realtime',
+		  		'value' => get_option( 'mpi_realtime' )
 		    )
 		);
 		
-		register_setting( 'mpi-settings-group', 'mpi_downloads' );
-		register_setting( 'mpi-settings-group', 'mpi_rating' );
+		register_setting( 'mpi-settings-group', 'mpi-settings' );
+		register_setting( 'mpi-settings-group', 'mpi_realtime' );
+	}
+	
+	function plugin_sync_info(){
+		echo '<p>In order to display accurate data, you should sync your plugin data from time to time. </p>
+		<p>Your plugin data was last updated: <strong>'. get_option( 'mpi_sync_timestamp', 'Never' ) .'</strong></p>';		
 	}
 	
 	function general_options_section_callback(){
 		echo '<p>Please choose which fields you would like to be visible on the plugin listing.</p>';		
+	}
+	
+	function autosync_options_section_callback(){
+		echo '<p>Reload all plugin data every time the Plugins page loads. </p> 
+			<p>Unless you only have a couple of plugins enabled, this <strong>is not recommended</strong> as it will significantly slow 
+			down page load.</p>';		
 	}
 	
 	function data_sync_section_callback(){
