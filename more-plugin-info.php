@@ -174,10 +174,10 @@ class MJ_More_Plugin_Info {
 	function display_settings(){
 		echo '<div class="wrap">';
 		echo '<h2>More Plugin Info</h2>';
-		echo "<form name='mpi_form' method='post' action='". str_replace( '%7E', '~', $_SERVER['REQUEST_URI'] )."'>";
+		echo "<form name='mpi_form' method='post' action='options.php'>";
 		settings_fields( 'mpi_settings' ); 
 		do_settings_sections( 'mpi_settings' ); 
-		echo '<p><input type="submit" name="Submit" class="button-primary" value="Save Changes" /></p>';
+		submit_button( 'Save Changes' );
 		echo '</form>';
 		echo '</div>';
 	}
@@ -240,9 +240,7 @@ class MJ_More_Plugin_Info {
 	}
 	
 	function checkbox_callback( $args ){
-		echo "<input type='checkbox' id='$args[id]' name='$args[id]'";
-		if ( !empty( $args['value'] ) ){ echo ' checked'; } 
-		echo ">";
+		echo "<input type='checkbox' id='$args[id]' name='$args[id]' ". checked( $args['value'], 'on', false ) .'>';
 	}
 	
 	/**
