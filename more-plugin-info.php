@@ -76,7 +76,7 @@ class MJ_More_Plugin_Info {
 		
 		foreach ( $plugins as $slug => $plugin ){
 			
-			$slug = substr( $slug, 0, strpos( $slug, '/' ) );
+			$slug = dirname( $slug );
 			
 			// Thanks to http://wp.tutsplus.com/tutorials/plugins/communicating-with-the-wordpress-org-plugin-api/
 			// for detailing the following WP API format
@@ -157,7 +157,7 @@ class MJ_More_Plugin_Info {
 				array_push( $links, $this->plugin_meta[ $slug ]['download_link'] );
 		}
 		
-		// Create filter, if users want to re-order / edit output
+		// Re-order and/or modify final output in each plugin listed
 		apply_filters( 'plugin_list_meta', $links );
 		
 		return $links;
