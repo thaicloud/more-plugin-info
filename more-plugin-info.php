@@ -135,7 +135,12 @@ class MJ_More_Plugin_Info {
 		
 		if ( !empty( $this->plugin_meta[ $slug ] ) ){	
 			
-			$settings = (array) get_option( 'mpi-settings' );
+			$defaults = array(
+				'downloads' => 'on',
+				'rating' => 'on',
+				'num_ratings' => 'on',
+			);
+			$settings = (array) get_option( 'mpi-settings', $defaults );
 
 			if ( $settings['downloads'] )
 				array_push( $links, $this->plugin_meta[ $slug ]['downloads'] );
@@ -194,7 +199,12 @@ class MJ_More_Plugin_Info {
 	 */
 	function admin_init(){
 		
-		$settings = (array) get_option( 'mpi-settings' );
+		$defaults = array(
+			'downloads' => 'on',
+			'rating' => 'on',
+			'num_ratings' => 'on',
+		);
+		$settings = (array) get_option( 'mpi-settings', $defaults );
 		
 		add_settings_section(  
 		    'mpi_general_options_section',           
