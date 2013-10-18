@@ -177,7 +177,8 @@ class MJ_More_Plugin_Info {
 		echo '<div class="wrap">';
 		echo '<h2>More Plugin Info</h2>';
 		echo '<form name="mpi_sync_form" method="post" action="plugins.php?mpi_sync">';
-		$this->plugin_sync_info();
+		echo '<p>In order to display accurate data, you should sync your plugin data from time to time. </p>
+		<p>Your plugin data was last updated: <strong>'. get_option( 'mpi_sync_timestamp', 'Never' ) .'</strong></p>';
 		submit_button( 'Update Plugin Data Now' );
 		echo '</form>';
 		echo '<form name="mpi_form" method="post" action="options.php">';
@@ -322,11 +323,6 @@ class MJ_More_Plugin_Info {
 		
 		register_setting( 'mpi-settings-group', 'mpi-settings' );
 		register_setting( 'mpi-settings-group', 'mpi_realtime' );
-	}
-	
-	function plugin_sync_info(){
-		echo '<p>In order to display accurate data, you should sync your plugin data from time to time. </p>
-		<p>Your plugin data was last updated: <strong>'. get_option( 'mpi_sync_timestamp', 'Never' ) .'</strong></p>';		
 	}
 	
 	function general_options_section_callback(){
