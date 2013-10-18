@@ -7,7 +7,7 @@ Author: Mike Jordan
 Author URI: http://brainstormmedia.com/
 */
 
-add_action( 'init', 'MJ_More_Plugin_Info::get_instance', 11 );
+add_action( 'init', 'MJ_More_Plugin_Info::get_instance' );
 
 class MJ_More_Plugin_Info {
 	
@@ -50,7 +50,7 @@ class MJ_More_Plugin_Info {
 		}else{
 			$mpi_plugin_meta = get_option( 'mpi_plugin_meta' );
 			if ( !empty( $mpi_plugin_meta ) ){
-				$this->plugin_meta = unserialize( $mpi_plugin_meta );
+				$this->plugin_meta = $mpi_plugin_meta ;
 			}
 		}
 		
@@ -117,7 +117,7 @@ class MJ_More_Plugin_Info {
 				$this->plugin_meta[ $slug ] = $plugin;
 			}
 		}
-		update_option( 'mpi_plugin_meta', serialize( $this->plugin_meta ) );
+		update_option( 'mpi_plugin_meta', $this->plugin_meta );
 		$timestamp = current_time( 'mysql' ); 
 		update_option( 'mpi_sync_timestamp', $timestamp );
 		
@@ -131,7 +131,7 @@ class MJ_More_Plugin_Info {
 	*/	
 	function plugin_row_meta( $links, $slug ){
 		
-		$slug = substr( $slug, 0, strpos( $slug, '/' ) );	
+		$slug = dirname( $slug );
 		
 		if ( !empty( $this->plugin_meta[ $slug ] ) ){	
 			
