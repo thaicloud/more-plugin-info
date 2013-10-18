@@ -12,18 +12,18 @@ add_action( 'init', 'MJ_More_Plugin_Info::get_instance' );
 class MJ_More_Plugin_Info {
 	
 	/**
-	* @var MJ_More_Plugin_Info Instance of the class.
-	*/
+	 * @var MJ_More_Plugin_Info Instance of the class.
+	 */
 	private static $instance = false;
 	
 	/**
-	* @var array results from WordPress API connection
-	*/
+	 * @var array results from WordPress API connection
+	 */
 	private $plugin_meta;
 	
 	/**
-	* Don't use this. Use ::get_instance() instead.
-	*/
+	 * Don't use this. Use ::get_instance() instead.
+	 */
 	public function __construct() {
 		if ( !self::$instance ) {
 			$message = '<code>' . __CLASS__ . '</code> is a singleton.<br/> Please get an instantiate it with <code>' . __CLASS__ . '::get_instance();</code>';
@@ -41,8 +41,8 @@ class MJ_More_Plugin_Info {
 	}
 	
 	/**
-	* Initial setup. Called by get_instance.
-	*/
+	 * Initial setup. Called by get_instance.
+	 */
 	protected function init() {
 		
 		if ( true == get_option( 'mpi_realtime', false ) || isset( $_GET['mpi_sync'] ) ){
@@ -67,11 +67,11 @@ class MJ_More_Plugin_Info {
 	}
 	
 	/**
-    * For each plugin, use WordPress API to collect additional data 
-    * and populate $plugin_meta
-    *
-    * @return 
-    */
+     * For each plugin, use WordPress API to collect additional data 
+     * and populate $plugin_meta
+     *
+     * @return array Extended plugin data
+     */
 	function plugin_meta_populate( $plugins ){
 		
 		foreach ( $plugins as $slug => $plugin ){
@@ -125,10 +125,10 @@ class MJ_More_Plugin_Info {
 	}
 	
 	/**
-	* If data exists, display on plugin listing (when options allow)
-	*
-	* @return 
-	*/	
+	 * If data exists, display on plugin listing (when options allow)
+	 *
+	 * @return array Plugin meta links / info
+	 */	
 	function plugin_row_meta( $links, $slug ){
 		
 		$slug = dirname( $slug );
@@ -164,15 +164,15 @@ class MJ_More_Plugin_Info {
 	}
 	
 	/**
-	* Add settings menu
-	*/
+	 * Add settings menu
+	 */
 	function admin_menu(){
 		add_options_page( 'More Plugin Info', 'More Plugin Info', 'administrator', 'more-plugin-info', array( $this, 'display_settings' ) );	    
 	}
 	
 	/**
-	* Display settings page 
-	*/
+	 * Display settings page 
+	 */
 	function display_settings(){
 		echo '<div class="wrap">';
 		echo '<h2>More Plugin Info</h2>';
@@ -189,8 +189,8 @@ class MJ_More_Plugin_Info {
 	}
 	
 	/**
-	* Initialize components of settings page
-	*/
+	 * Initialize components of settings page
+	 */
 	function admin_init(){
 		
 		$settings = (array) get_option( 'mpi-settings' );
@@ -349,10 +349,10 @@ class MJ_More_Plugin_Info {
 	}
 	
 	/**
-	* Add settings page link for this plugin
-	*
-	* @return 
-	*/
+	 * Add settings page link for this plugin
+	 *
+	 * @return array 
+	 */
 	function plugin_action_links( $links ){
 	
 		$settings_link = '<a href="options-general.php?page=more-plugin-info">Settings</a>'; 
@@ -362,8 +362,8 @@ class MJ_More_Plugin_Info {
 	}
 	
 	/**
-	* Add sync prompt on plugin activation
-	*/
+	 * Add sync prompt on plugin activation
+	 */
 	function admin_notices() {
 	
 		$mpi_plugin_check = get_option( 'mpi_sync_timestamp' );
