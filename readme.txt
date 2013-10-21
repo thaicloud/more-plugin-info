@@ -5,7 +5,7 @@ Author URI: http://brainstormmedia.com
 Plugin URI: https://bitbucket.org/brainstormmedia/more-plugin-info
 Requires at least: 2.8
 Tested up to: 3.6.1
-Stable tag: 1.0
+Stable tag: 1.0.0
 
 Connects to the WordPress.org Plugin API to display additional plugin information about
 installed plugins, such as number of downloads and rating.
