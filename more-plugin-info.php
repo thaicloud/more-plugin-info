@@ -45,7 +45,7 @@ class MJ_More_Plugin_Info {
 	 */
 	protected function init() {
 		
-		if ( true == get_option( 'mpi_realtime', false ) || isset( $_GET['mpi_sync'] ) ){
+		if ( true === get_option( 'mpi_realtime', false ) || isset( $_GET['mpi_sync'] ) ){
 			add_filter( 'all_plugins', array( $this, 'plugin_meta_populate' ) );
 		}else{
 			$mpi_plugin_meta = get_option( 'mpi_plugin_meta' );
