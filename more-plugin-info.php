@@ -46,7 +46,16 @@ class MJ_More_Plugin_Info {
 	 */
 	protected function init() {
 
-		if ( true === get_option( 'mpi_realtime', false ) || isset( $_GET['mpi_sync'] ) ) {
+		add_filter( 'cron_schedules', array( $this, 'add_weekly_cron_schedule' ) );
+
+		if ( ! wp_next_scheduled( 'mpi_sync' ) ) {
+			$mpi_sync_frequency = apply_filters( 'mpi_sync_frequency', 'weekly' );
+			wp_schedule_event( time(), esc_html( $mpi_sync_frequency ), 'mpi_sync' );
+		}
+
+		add_action( 'mpi_sync', array( $this, 'plugin_meta_populate' ) );
+
+		if ( isset( $_GET['mpi_sync'] ) ) {
 			add_filter( 'all_plugins', array( $this, 'plugin_meta_populate' ) );
 		} else {
 			$mpi_plugin_meta = get_option( 'mpi_plugin_meta' );
@@ -67,6 +76,16 @@ class MJ_More_Plugin_Info {
 
 	}
 
+	// Add a new interval of a week
+	function add_weekly_cron_schedule( $schedules ) {
+		$schedules['weekly'] = array(
+			'interval' => 604800, // 1 week in seconds
+			'display'  => __( 'Once Weekly' ),
+		);
+
+		return $schedules;
+	}
+
 	/**
 	 * For each plugin, use WordPress API to collect additional data
 	 * and populate $plugin_meta
@@ -74,6 +93,10 @@ class MJ_More_Plugin_Info {
 	 * @return array Extended plugin data
 	 */
 	function plugin_meta_populate( $plugins ) {
+
+		if ( empty( $plugins ) ) {
+			$plugins = get_plugins();
+		}
 
 		foreach ( $plugins as $slug => $plugin ) {
 
@@ -187,9 +210,9 @@ class MJ_More_Plugin_Info {
 	 */
 	function admin_menu() {
 		add_options_page( 'More Plugin Info', 'More Plugin Info', 'administrator', 'more-plugin-info', array(
-				$this,
-				'display_settings'
-			) );
+			$this,
+			'display_settings'
+		) );
 	}
 
 	/**
@@ -199,7 +222,7 @@ class MJ_More_Plugin_Info {
 		echo '<div class="wrap">';
 		echo '<h2>More Plugin Info</h2>';
 		echo '<form name="mpi_sync_form" method="post" action="plugins.php?mpi_sync">';
-		echo '<p>In order to display accurate data, you should sync your plugin data from time to time. </p>
+		echo '<p>By default, plugin info will automatically be updated once per week. </p>
 		<p>Your plugin data was last updated: <strong>' . get_option( 'mpi_sync_timestamp', 'Never' ) . '</strong></p>';
 		submit_button( 'Update Plugin Data Now' );
 		echo '</form>';
@@ -232,7 +255,7 @@ class MJ_More_Plugin_Info {
 
 		add_settings_section(
 			'mpi_autosync_options_section',
-			'Automatic Sync',
+			'Auto-Update Plugin Data',
 			array( $this, 'autosync_options_section_callback' ),
 			'more-plugin-info'
 		);
@@ -348,19 +371,19 @@ class MJ_More_Plugin_Info {
 			)
 		);
 		add_settings_field(
-			'mpi_realtime',
-			'Enable automatic syncing',
+			'mpi_cron_enable',
+			'Enable cron job',
 			array( $this, 'checkbox_callback' ),
 			'more-plugin-info',
 			'mpi_autosync_options_section',
 			array(
-				'id'    => 'mpi_realtime',
-				'value' => get_option( 'mpi_realtime' )
+				'id'    => 'mpi_cron_enable',
+				'value' => get_option( 'mpi_cron_enable' )
 			)
 		);
 
 		register_setting( 'mpi-settings-group', 'mpi-settings' );
-		register_setting( 'mpi-settings-group', 'mpi_realtime' );
+		register_setting( 'mpi-settings-group', 'mpi_cron_enable' );
 	}
 
 	function general_options_section_callback() {
@@ -368,14 +391,8 @@ class MJ_More_Plugin_Info {
 	}
 
 	function autosync_options_section_callback() {
-		echo '<p>Reload all plugin data every time the Plugins page loads. </p> 
-			<p>Unless you only have a couple of plugins enabled, this <strong>is not recommended</strong> as it will significantly slow 
-			down page load.</p>';
-	}
-
-	function data_sync_section_callback() {
-		echo '<p>In order to display accurate data, you should sync your plugin data from time to time. </p>
-		<p>Your plugin data was last updated: <strong>' . get_option( 'mpi_sync_timestamp', 'Never' ) . '</strong></p>';
+		echo '<p>Schedule a cron job to run once per week. </p>
+			<p>Enabling this option is the best way to ensure that your plugin info is always up-to-date.</p>';
 	}
 
 	function checkbox_callback( $args ) {
@@ -405,7 +422,7 @@ class MJ_More_Plugin_Info {
 			?>
 			<div class="updated">
 				<p>In order to complete your More Plugin Info setup,
-					<a href="plugins.php?mpi_sync">please run the plugin sync</a>.<br />
+					<a href="plugins.php?mpi_sync">please run the initial plugin sync</a>.<br />
 					This may take a couple of minutes.</p>
 			</div>
 		<?php
@@ -413,3 +430,18 @@ class MJ_More_Plugin_Info {
 	}
 }
 
+register_uninstall_hook( __FILE__, 'mj_uninstall' );
+
+/**
+ * Remove options & cron on plugin uninstall
+ */
+function mj_uninstall() {
+
+	// Delete options
+	delete_option( 'mpi_realtime' );
+	delete_option( 'mpi_plugin_meta' );
+	delete_option( 'mpi_sync_timestamp' );
+
+	// Unschedule any outstanding cronjobs
+	wp_unschedule_event( 'weekly', 'mpi_sync' );
+}
