@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: More Plugin Info
-Description: Displays additional information about each plugin on the Plugins page
+Description: Display additional information about each plugin on the Plugins page
 Version: 1.0.1
 Author: Mike Jordan
 Author URI: http://brainstormmedia.com/

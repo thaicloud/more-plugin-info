@@ -1,10 +1,10 @@
 === More Plugin Info ===
 Contributors: Thaicloud
 Tags: plugin, meta, ratings, downloads
-Author URI: http://brainstormmedia.com 
+Author URI: http://knowmike.com
 Plugin URI: http://wordpress.org/plugins/more-plugin-info/
-Requires at least: 2.8
-Tested up to: 3.8.0
+Requires at least: 3.0
+Tested up to: 4.1.0
 Stable tag: 1.0.3
 
 Connects to the WordPress.org Plugin API to display additional plugin information about
@@ -34,7 +34,7 @@ To change the plugin settings, go to Settings > More Plugin Info and select whic
 * Add filter for changing cron frequency
 * Remove auto-sync option for each load of plugins screen
 * register_uninstall_hook function for removing options on uninstall
-
+* Update readme
 
 = 1.0.2 =
 * Add option for link to wordpress.org plugin page
