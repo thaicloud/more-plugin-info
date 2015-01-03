@@ -29,6 +29,9 @@ To change the plugin settings, go to Settings > More Plugin Info and select whic
 
 == Changelog ==
 
+= 1.1.0 =
+* Improve security: add escape & sanitization functions
+
 = 1.0.4 =
 * Fix cron enable/disable behavior
 
