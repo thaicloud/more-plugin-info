@@ -146,11 +146,12 @@ class MJ_More_Plugin_Info {
 				$plugin['downloads']     = 'Downloads: ' . sanitize_text_field( $plugin_info->downloaded );
 
 				$this->plugin_meta[ $slug ] = $plugin;
+
+				update_option( 'mpi_plugin_meta', $this->plugin_meta );
+				$timestamp = current_time( 'mysql' );
+				update_option( 'mpi_sync_timestamp', $timestamp );
 			}
 		}
-		update_option( 'mpi_plugin_meta', $this->plugin_meta );
-		$timestamp = current_time( 'mysql' );
-		update_option( 'mpi_sync_timestamp', $timestamp );
 
 		return $plugins;
 	}
@@ -256,14 +257,14 @@ class MJ_More_Plugin_Info {
 			'mpi_general_options_section',
 			'General Options',
 			array( $this, 'general_options_section_callback' ),
-			'more-plugin-info',
+			'more-plugin-info'
 		);
 
 		add_settings_section(
 			'mpi_autosync_options_section',
 			'Auto-Update Plugin Data',
 			array( $this, 'autosync_options_section_callback' ),
-			'more-plugin-info',
+			'more-plugin-info'
 		);
 
 		add_settings_field(
