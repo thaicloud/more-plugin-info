@@ -402,7 +402,7 @@ class MJ_More_Plugin_Info {
 	}
 
 	function checkbox_callback( $args ) {
-		echo "<input type='checkbox' id='$args[id]' name='$args[id]' " . checked( $args['value'], 'on', false ) . '>';
+		echo '<input type="checkbox" id="' . esc_attr( $args['id'] ) . '" name="' . esc_attr( $args['id'] ) . '" ' . checked( $args['value'], 'on', false ) . '">';
 	}
 
 	/**
