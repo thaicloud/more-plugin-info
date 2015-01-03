@@ -437,12 +437,12 @@ class MJ_More_Plugin_Info {
 	}
 }
 
-register_uninstall_hook( __FILE__, 'mj_uninstall' );
+register_uninstall_hook( __FILE__, 'mj_mpi_uninstall' );
 
 /**
  * Remove options & cron on plugin uninstall
  */
-function mj_uninstall() {
+function mj_mpi_uninstall() {
 
 	// Delete options
 	delete_option( 'mpi_realtime' );
