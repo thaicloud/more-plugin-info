@@ -48,9 +48,15 @@ class MJ_More_Plugin_Info {
 
 		add_filter( 'cron_schedules', array( $this, 'add_weekly_cron_schedule' ) );
 
-		if ( ! wp_next_scheduled( 'mpi_sync' ) ) {
-			$mpi_sync_frequency = apply_filters( 'mpi_sync_frequency', 'weekly' );
+		$cron_enabled = get_option( 'mpi_cron_enable', 'on' );
+		$mpi_sync_frequency = apply_filters( 'mpi_sync_frequency', 'weekly' );
+		$mpi_sync = wp_next_scheduled( 'mpi_sync' );
+
+		if ( ! $mpi_sync && 'on' === $cron_enabled ) {
 			wp_schedule_event( time(), esc_html( $mpi_sync_frequency ), 'mpi_sync' );
+		}else if ( ! empty( $mpi_sync ) && 'on' != $cron_enabled ){
+			$timestamp = wp_next_scheduled( 'mpi_sync' );
+			wp_unschedule_event( $timestamp, 'mpi_sync' );
 		}
 
 		add_action( 'mpi_sync', array( $this, 'plugin_meta_populate' ) );
@@ -378,7 +384,7 @@ class MJ_More_Plugin_Info {
 			'mpi_autosync_options_section',
 			array(
 				'id'    => 'mpi_cron_enable',
-				'value' => get_option( 'mpi_cron_enable' )
+				'value' => get_option( 'mpi_cron_enable', 'on' )
 			)
 		);
 
