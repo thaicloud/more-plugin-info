@@ -256,14 +256,14 @@ class MJ_More_Plugin_Info {
 			'mpi_general_options_section',
 			'General Options',
 			array( $this, 'general_options_section_callback' ),
-			'more-plugin-info'
+			'more-plugin-info',
 		);
 
 		add_settings_section(
 			'mpi_autosync_options_section',
 			'Auto-Update Plugin Data',
 			array( $this, 'autosync_options_section_callback' ),
-			'more-plugin-info'
+			'more-plugin-info',
 		);
 
 		add_settings_field(
@@ -274,7 +274,7 @@ class MJ_More_Plugin_Info {
 			'mpi_general_options_section',
 			array(
 				'id'    => 'mpi-settings[downloads]',
-				'value' => $settings['downloads']
+				'value' => sanitize_text_field( $settings['downloads'] ),
 			)
 		);
 		add_settings_field(
@@ -285,7 +285,7 @@ class MJ_More_Plugin_Info {
 			'mpi_general_options_section',
 			array(
 				'id'    => 'mpi-settings[rating]',
-				'value' => $settings['rating']
+				'value' => sanitize_text_field( $settings['rating'] ),
 			)
 		);
 		add_settings_field(
@@ -296,7 +296,7 @@ class MJ_More_Plugin_Info {
 			'mpi_general_options_section',
 			array(
 				'id'    => 'mpi-settings[num_ratings]',
-				'value' => $settings['num_ratings']
+				'value' => sanitize_text_field( $settings['num_ratings'] ),
 			)
 		);
 		add_settings_field(
@@ -307,7 +307,7 @@ class MJ_More_Plugin_Info {
 			'mpi_general_options_section',
 			array(
 				'id'    => 'mpi-settings[added]',
-				'value' => $settings['added']
+				'value' => sanitize_text_field( $settings['added'] ),
 			)
 		);
 		add_settings_field(
@@ -318,7 +318,7 @@ class MJ_More_Plugin_Info {
 			'mpi_general_options_section',
 			array(
 				'id'    => 'mpi-settings[updated]',
-				'value' => $settings['updated']
+				'value' => sanitize_text_field( $settings['updated'] ),
 			)
 		);
 		add_settings_field(
@@ -329,7 +329,7 @@ class MJ_More_Plugin_Info {
 			'mpi_general_options_section',
 			array(
 				'id'    => 'mpi-settings[requires]',
-				'value' => $settings['requires']
+				'value' => sanitize_text_field( $settings['requires'] )
 			)
 		);
 		add_settings_field(
@@ -340,7 +340,7 @@ class MJ_More_Plugin_Info {
 			'mpi_general_options_section',
 			array(
 				'id'    => 'mpi-settings[tested]',
-				'value' => $settings['tested']
+				'value' => sanitize_text_field( $settings['tested'] ),
 			)
 		);
 		add_settings_field(
@@ -351,7 +351,7 @@ class MJ_More_Plugin_Info {
 			'mpi_general_options_section',
 			array(
 				'id'    => 'mpi-settings[plugin_link]',
-				'value' => $settings['plugin_link']
+				'value' => sanitize_text_field( $settings['plugin_link'] ),
 			)
 		);
 		add_settings_field(
@@ -362,7 +362,7 @@ class MJ_More_Plugin_Info {
 			'mpi_general_options_section',
 			array(
 				'id'    => 'mpi-settings[donate_link]',
-				'value' => $settings['donate_link']
+				'value' => sanitize_text_field( $settings['donate_link'] ),
 			)
 		);
 		add_settings_field(
@@ -373,7 +373,7 @@ class MJ_More_Plugin_Info {
 			'mpi_general_options_section',
 			array(
 				'id'    => 'mpi-settings[download_link]',
-				'value' => $settings['download_link']
+				'value' => sanitize_text_field( $settings['download_link'] ),
 			)
 		);
 		add_settings_field(
@@ -384,7 +384,7 @@ class MJ_More_Plugin_Info {
 			'mpi_autosync_options_section',
 			array(
 				'id'    => 'mpi_cron_enable',
-				'value' => get_option( 'mpi_cron_enable', 'on' )
+				'value' => sanitize_text_field( get_option( 'mpi_cron_enable', 'on' ) ),
 			)
 		);
 
