@@ -449,5 +449,6 @@ function mj_uninstall() {
 	delete_option( 'mpi_sync_timestamp' );
 
 	// Unschedule any outstanding cronjobs
-	wp_unschedule_event( 'weekly', 'mpi_sync' );
+	$timestamp = wp_next_scheduled( 'mpi_sync' );
+	wp_unschedule_event( $timestamp, 'mpi_sync' );
 }
