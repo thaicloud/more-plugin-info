@@ -111,7 +111,7 @@ class MJ_More_Plugin_Info {
 			// Thanks to http://wp.tutsplus.com/tutorials/plugins/communicating-with-the-wordpress-org-plugin-api/
 			// for detailing the following WP API format
 			$args     = (object) array(
-				'slug'   => $slug,
+				'slug'   => esc_html( $slug ),
 				'fields' => array(
 					'sections' => false,
 					'tags'     => false
@@ -134,16 +134,16 @@ class MJ_More_Plugin_Info {
 			// If plugin exists in the repo, populate $plugin_meta accordingly
 			if ( ! empty( $plugin_info ) ) {
 
-				$plugin['requires']      = "Requires: $plugin_info->requires";
-				$plugin['tested']        = "Tested: $plugin_info->tested";
-				$plugin['rating']        = "Average rating: $plugin_info->rating";
-				$plugin['num_ratings']   = "# of ratings: $plugin_info->num_ratings";
-				$plugin['added']         = "Added: $plugin_info->added";
-				$plugin['plugin_link']   = "<a target='_blank' href='http://wordpress.org/plugins/$slug'>WordPress.org page</a>";
-				$plugin['donate_link']   = "<a target='_blank' href='$plugin_info->donate_link'>Donate</a>";
-				$plugin['download_link'] = "<a target='_blank' href='$plugin_info->download_link'>Download</a>";
-				$plugin['updated']       = "Updated: $plugin_info->last_updated";
-				$plugin['downloads']     = "Downloads: $plugin_info->downloaded";
+				$plugin['requires']      = 'Requires: ' . sanitize_text_field( $plugin_info->requires );
+				$plugin['tested']        = 'Tested: ' . sanitize_text_field( $plugin_info->tested );
+				$plugin['rating']        = 'Average rating: ' . sanitize_text_field( $plugin_info->rating );
+				$plugin['num_ratings']   = '# of ratings: ' . sanitize_text_field( $plugin_info->num_ratings );
+				$plugin['added']         = 'Added: ' . sanitize_text_field( $plugin_info->added );
+				$plugin['plugin_link']   = '<a target="_blank" href="http://wordpress.org/plugins/' . sanitize_text_field( $slug ) . '">WordPress.org page</a>';
+				$plugin['donate_link']   = '<a target="_blank" href="' . sanitize_text_field( $plugin_info->donate_link ) . '">Donate</a>';
+				$plugin['download_link'] = '<a target="_blank" href="' . sanitize_text_field( $plugin_info->download_link ) . '">Download</a>';
+				$plugin['updated']       = 'Updated: ' . sanitize_text_field( $plugin_info->last_updated );
+				$plugin['downloads']     = 'Downloads: ' . sanitize_text_field( $plugin_info->downloaded );
 
 				$this->plugin_meta[ $slug ] = $plugin;
 			}
