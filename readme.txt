@@ -4,17 +4,24 @@ Tags: plugin, meta, ratings, downloads
 Author URI: http://knowmike.com
 Plugin URI: http://wordpress.org/plugins/more-plugin-info/
 Requires at least: 3.0
-Tested up to: 4.1.0
-Stable tag: 1.1.0
+Tested up to: 4.1
+Stable tag: 1.1.1
 
 Connects to the WordPress.org Plugin API to display additional plugin information about
 installed plugins, such as number of downloads and rating.
 
 == Description ==
 
-Hooks into the plugin listing to display relevant information about installed plugins, and provides a setting page for selecting which fields should be shown.
+Ever wish that the plugins page on your WordPress site had more information about the plugins that you have installed?
 
-To change the plugin settings, go to Settings > More Plugin Info and select which checkboxes you would like to be included. This information may be seen on the Plugins page, at the bottom of each plugin listed.
+You shouldn't have to open up another tab and search for the plugin on wordpress.org just to find out things like:
+When was it last updated? How many ratings does it have? What version of WordPress has it been tested up to?
+
+This plugin resolves that issue- it grabs details about all of the plugins on your site from wordpress.org, and displays them right there underneath each plugin's description. It also includes a settings page, so you can choose which information you want to be shown.
+
+There aren't a lot of unnecessary bells and whistles here- this is a secure, clean-cut way to customize the information shown on your plugins page.
+
+Enjoy!
 
 == Installation ==
 
@@ -24,10 +31,13 @@ To change the plugin settings, go to Settings > More Plugin Info and select whic
 
 == Screenshots == 
 
-1. An example plugin as seen on the plugin listing page; note the 'Average Rating' and 'Number of Ratings' values. Many additional values may be shown as well. 
+1. An example plugin as seen on the plugin listing page; note the newly added number of downloads and star rating. Many additional values may be shown as well.
 2. The More Plugin Info settings page permits field toggle, as well as auto or manual sync down of plugin data from WordPress.org. 
 
 == Changelog ==
+
+= 1.1.1 =
+* Rating info shown as stars
 
 = 1.1.0 =
 * Improve security: add escape & sanitization functions

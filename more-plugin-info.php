@@ -2,9 +2,9 @@
 /*
 Plugin Name: More Plugin Info
 Description: Display additional information about each plugin on the Plugins page
-Version: 1.1.0
+Version: 1.1.1
 Author: Mike Jordan
-Author URI: http://brainstormmedia.com/
+Author URI: http://knowmike.com/
 */
 
 add_action( 'init', 'MJ_More_Plugin_Info::get_instance' );
@@ -136,7 +136,7 @@ class MJ_More_Plugin_Info {
 
 				$plugin['requires']      = 'Requires: ' . sanitize_text_field( $plugin_info->requires );
 				$plugin['tested']        = 'Tested: ' . sanitize_text_field( $plugin_info->tested );
-				$plugin['rating']        = 'Average rating: ' . sanitize_text_field( $plugin_info->rating );
+				$plugin['rating']        = sanitize_text_field( $plugin_info->rating );
 				$plugin['num_ratings']   = '# of ratings: ' . sanitize_text_field( $plugin_info->num_ratings );
 				$plugin['added']         = 'Added: ' . sanitize_text_field( $plugin_info->added );
 				$plugin['plugin_link']   = '<a target="_blank" href="http://wordpress.org/plugins/' . sanitize_text_field( $slug ) . '">WordPress.org page</a>';
@@ -178,7 +178,26 @@ class MJ_More_Plugin_Info {
 				array_push( $links, $this->plugin_meta[ $slug ]['downloads'] );
 			}
 			if ( $settings['rating'] ) {
-				array_push( $links, $this->plugin_meta[ $slug ]['rating'] );
+
+				// Non-english decimal places when the $rating is coming from a string
+				$rating = str_replace( ',', '.', $this->plugin_meta[ $slug ]['rating'] );
+
+				// Convert Percentage to star rating, 0..5 in .5 increments
+				$rating = round( $rating / 10, 0 ) / 2;
+
+				// Calculate the number of each type of star needed
+				$full_stars = floor( $rating );
+				$half_stars = ceil( $rating - $full_stars );
+				$empty_stars = 5 - $full_stars - $half_stars;
+
+				$rating_output = '<span class="star-rating">';
+				$rating_output .= str_repeat( '<div class="star star-full"></div>', $full_stars );
+				$rating_output .= str_repeat( '<div class="star star-half"></div>', $half_stars );
+				$rating_output .= str_repeat( '<div class="star star-empty"></div>', $empty_stars);
+				$rating_output .= '</span>';
+
+				array_push( $links, $rating_output );
+
 			}
 			if ( $settings['num_ratings'] ) {
 				array_push( $links, $this->plugin_meta[ $slug ]['num_ratings'] );
