@@ -7,7 +7,7 @@ Requires at least: 3.0
 Tested up to: 4.1
 Stable tag: 1.1.2
 
-Connects to the WordPress.org Plugin API to display additional plugin information about
+Connects to WordPress.org, using the Plugin API, to display additional plugin information about
 installed plugins, such as number of downloads and rating.
 
 == Description ==
