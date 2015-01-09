@@ -5,7 +5,7 @@ Author URI: http://knowmike.com
 Plugin URI: http://wordpress.org/plugins/more-plugin-info/
 Requires at least: 3.0
 Tested up to: 4.1
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 
 Connects to the WordPress.org Plugin API to display additional plugin information about
 installed plugins, such as number of downloads and rating.
@@ -23,6 +23,8 @@ There aren't a lot of unnecessary bells and whistles here- this is a secure, cle
 
 Enjoy!
 
+NEW: WP CLI Support- plugin data can now be manually updated by running 'wp more-plugin-info sync'
+
 == Installation ==
 
 1. Upload the `more-plugin-info` folder to the `/wp-content/plugins/` directory
@@ -35,6 +37,9 @@ Enjoy!
 2. The More Plugin Info settings page permits field toggle, as well as auto or manual sync down of plugin data from WordPress.org. 
 
 == Changelog ==
+
+= 1.1.2 =
+* Add wp-cli command for syncing down plugin info
 
 = 1.1.1 =
 * Rating info shown as stars

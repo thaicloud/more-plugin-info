@@ -2,7 +2,7 @@
 /*
 Plugin Name: More Plugin Info
 Description: Display additional information about each plugin on the Plugins page
-Version: 1.1.1
+Version: 1.1.2
 Author: Mike Jordan
 Author URI: http://knowmike.com/
 */
@@ -79,6 +79,12 @@ class MJ_More_Plugin_Info {
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+
+
+		// Add wp cli command for running sync
+		if ( defined('WP_CLI') && WP_CLI ) {
+			include __DIR__ . '/includes/class-wp-cli-commands.php';
+		}
 
 	}
 
