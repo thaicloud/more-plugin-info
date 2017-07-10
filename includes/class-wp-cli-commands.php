@@ -16,7 +16,8 @@ class More_Plugin_Info_WP_CLI_Command extends WP_CLI_Command {
 	public function sync() {
 
 		$results = array();
-		$plugins = MJ_More_Plugin_Info::plugin_meta_populate();
+		$plugins = new MJ_More_Plugin_Info;
+		$plugins =  $plugins->plugin_meta_populate();
 
 		if ( ! is_array( $plugins ) ) {
 			WP_CLI::error( "Oops, there has been an error. :(" );
